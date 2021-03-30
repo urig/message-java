@@ -1,5 +1,6 @@
 package io.urig.messages;
 
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +11,11 @@ import java.util.List;
 public class MessagesController {
 
     private final MessagesRepository repository;
+    private final Logger logger;
 
-    MessagesController(MessagesRepository repository) {
+    MessagesController(MessagesRepository repository, Logger logger) {
         this.repository = repository;
+        this.logger = logger;
     }
 
     @GetMapping(value = {"/messages/{recipient}", "/messages/"})
@@ -23,6 +26,8 @@ public class MessagesController {
             return ResponseEntity.ok(messages);
 
         } catch (IllegalArgumentException ex) {
+            var error = String.format("Illegal argument in GET. recipient=[%s]", recipient);
+            logger.error(error, ex);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -35,6 +40,8 @@ public class MessagesController {
             return ResponseEntity.ok(result);
 
         } catch (IllegalArgumentException ex) {
+            var error = String.format("Illegal argument in POST. recipient=[%s], message=[%s]", recipient, message);
+            logger.error(error, ex);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }

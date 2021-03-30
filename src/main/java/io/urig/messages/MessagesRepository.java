@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class MessagesRepository {
 
-    private ConcurrentHashMap<String, List<Message>> store;
+    private final ConcurrentHashMap<String, List<Message>> store;
 
     public MessagesRepository() {
         store = new ConcurrentHashMap<>();
@@ -18,7 +18,7 @@ public class MessagesRepository {
 
     public List<Message> getMessages(String recipient) {
         validateRecipient(recipient);
-        return store.getOrDefault(recipient, new ArrayList<Message>());
+        return store.getOrDefault(recipient, new ArrayList<>());
     }
 
     public Message addMessage(String recipient, Message message) {
