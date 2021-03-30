@@ -23,6 +23,7 @@ public class MessagesRepository {
 
     public Message addMessage(String recipient, Message message) {
         validateRecipient(recipient);
+        validateMessage(message);
         setMetadataOnMessage(message, recipient);
         var newList = new ArrayList<Message>() {
             {
@@ -45,6 +46,12 @@ public class MessagesRepository {
     private static void validateRecipient(String recipient) {
         if (recipient == null || recipient.isBlank()) {
             throw new IllegalArgumentException("recipient cannot be null or empty");
+        }
+    }
+
+    private static void validateMessage(Message message) {
+        if (message == null) {
+            throw new IllegalArgumentException("message cannot be null");
         }
     }
 }

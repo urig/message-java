@@ -45,7 +45,8 @@ public class MessagesRepositoryTests {
         assertThat(message.getContent()).isEqualTo("baz");
     }
 
-    @Test public void addMessage_existingRecipient_messageIsAdded() {
+    @Test
+    public void addMessage_existingRecipient_messageIsAdded() {
         // Arrange
         var target = new MessagesRepository();
         var message = new Message() {{
@@ -60,4 +61,26 @@ public class MessagesRepositoryTests {
         var actual = target.getMessages("buzz");
         assertThat(actual).hasSize(2);
     }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"  ", "\t", "\n"})
+    public void addMessage_badRecipient_throws(String recipient) {
+        var target = new MessagesRepository();
+        var message = new Message();
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> {
+                    target.addMessage(recipient, message);
+                });
+    }
+
+    @Test
+    public void addMessage_nullMessage_throws() {
+        var target = new MessagesRepository();
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> {
+                    target.addMessage("foo", null);
+                });
+    }
+
 }
