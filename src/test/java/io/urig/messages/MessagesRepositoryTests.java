@@ -49,17 +49,24 @@ public class MessagesRepositoryTests {
     public void addMessage_existingRecipient_messageIsAdded() {
         // Arrange
         var target = new MessagesRepository();
-        var message = new Message() {{
+        var message1 = new Message() {{
             setRecipient("foo");
             setSender("bar");
-            setContent("baz");
+            setContent("message 1");
+        }};
+        var message2 = new Message() {{
+            setRecipient("foo");
+            setSender("bar");
+            setContent("message 2");
         }};
         // Act
-        target.addMessage("buzz", message);
-        target.addMessage("buzz", message);
+        target.addMessage("buzz", message1);
+        target.addMessage("buzz", message2);
         // Assert
         var actual = target.getMessages("buzz");
         assertThat(actual).hasSize(2);
+        assertThat(actual.get(0).getContent()).isEqualTo("message 1");
+        assertThat(actual.get(1).getContent()).isEqualTo("message 2");
     }
 
     @ParameterizedTest
