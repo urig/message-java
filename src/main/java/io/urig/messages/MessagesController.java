@@ -18,9 +18,9 @@ public class MessagesController {
         this.logger = logger;
     }
 
-    @GetMapping(value = {"/messages", "/messages/{recipient}"})
+    @GetMapping("/messages/{recipient}")
     ResponseEntity<List<Message>> getMessages(
-            @PathVariable(required = false) String recipient) {
+            @PathVariable String recipient) {
         try {
 
             var messages = repository.getMessages(recipient);
@@ -33,9 +33,9 @@ public class MessagesController {
         }
     }
 
-    @PostMapping(value = {"/messages", "/messages/{recipient}"})
+    @PostMapping("/messages/{recipient}")
     ResponseEntity<Message> addMessage(
-            @PathVariable(required = false) String recipient,
+            @PathVariable String recipient,
             @RequestBody Message message) {
         try {
 
@@ -43,7 +43,8 @@ public class MessagesController {
             return ResponseEntity.ok(result);
 
         } catch (IllegalArgumentException ex) {
-            var error = String.format("Illegal argument in POST. recipient=[%s], message=[%s]", recipient, message);
+            var error = String.format("Illegal argument in POST. recipient=[%s], message=[%s]",
+                    recipient, message);
             logger.error(error, ex);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

@@ -18,25 +18,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Category("Integration")
 class MessagesApplicationTests {
 
-	@LocalServerPort
-	private int port;
+    @LocalServerPort
+    private int port;
 
-	@Autowired
-	private TestRestTemplate restTemplate;
+    @Autowired
+    private TestRestTemplate restTemplate;
 
-	@Test
-	public void GET_newRecipient_emptyList() {
-		var url = "http://localhost:" + port + "/messages/foo";
-		var actual = this.restTemplate.getForObject(url, String.class);
-		assertThat(actual).isEqualTo("[]");
-	}
+    @Test
+    public void GET_newRecipient_emptyList() {
+        var url = "http://localhost:" + port + "/messages/foo";
+        var actual = this.restTemplate.getForObject(url, String.class);
+        assertThat(actual).isEqualTo("[]");
+    }
 
-	@ParameterizedTest
-	@ValueSource(strings = {"", "  ", "\t", "\n"})
-	public void GET_badRecipient_403(String recipient) {
-		var url = "http://localhost:" + port + "/messages/"+recipient;
-		var actual = this.restTemplate
-				.exchange(url, HttpMethod.GET, null, Void.class, new Object());
-		assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-	}
+    @ParameterizedTest
+    @ValueSource(strings = {"  ", "\t", "\n"})
+    public void GET_badRecipient_403(String recipient) {
+        var url = "http://localhost:" + port + "/messages/" + recipient;
+        var actual = this.restTemplate
+                .exchange(url, HttpMethod.GET, null, Void.class, new Object());
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
 }
