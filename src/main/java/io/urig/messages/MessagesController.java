@@ -18,8 +18,9 @@ public class MessagesController {
         this.logger = logger;
     }
 
-    @GetMapping(value = {"/messages/{recipient}", "/messages/"})
-    ResponseEntity<List<Message>> getMessages(@PathVariable String recipient) {
+    @GetMapping(value = {"/messages", "/messages/{recipient}"})
+    ResponseEntity<List<Message>> getMessages(
+            @PathVariable(required = false) String recipient) {
         try {
 
             var messages = repository.getMessages(recipient);
@@ -32,8 +33,10 @@ public class MessagesController {
         }
     }
 
-    @PostMapping(value = {"/messages/{recipient}", "/messages/"})
-    ResponseEntity<Message> addMessage(@PathVariable String recipient, @RequestBody Message message) {
+    @PostMapping(value = {"/messages", "/messages/{recipient}"})
+    ResponseEntity<Message> addMessage(
+            @PathVariable(required = false) String recipient,
+            @RequestBody Message message) {
         try {
 
             var result = repository.addMessage(recipient, message);
