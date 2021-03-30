@@ -1,8 +1,9 @@
 package io.urig.messages;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -16,9 +17,14 @@ public class MessagesController {
         this.repository = repository;
     }
 
-    @GetMapping("/messages/{recipient}")
-    List<Message> getMessages(@PathVariable String recipient) {
-        return repository.getMessages(recipient);
+    @GetMapping(value = {"/messages/{recipient}", "/messages/"})
+    ResponseEntity<List<Message>> getMessages(@PathVariable String recipient) {
+        try {
+            return ResponseEntity.ok(
+                    repository.getMessages(recipient));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
 }
